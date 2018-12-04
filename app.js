@@ -19,7 +19,23 @@ app.use( express.static( path.join(__dirname, "public") ) );
 /**************************************************************************
 ****************************** csv2json *********************************
 **************************************************************************/
+var csv = require('csvtojson');
+var fs = require('fs');
 
+const csvFilePath = './world_data.csv';
+var json;
+csv().fromFile(csvFilePath).then(
+    (_json) => {
+        json = _json;
+        console.log("JSON : ", json);
+        //write json as text file
+        // fs.writeFile("json.txt", json, function(err) {
+        //     if (err) {
+        //         console.log(err);
+        //     }
+        // });
+    }
+)
 /**************************************************************************
 ********************** handle HTTP METHODS ***********************
 **************************************************************************/
