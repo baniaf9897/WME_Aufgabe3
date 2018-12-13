@@ -160,4 +160,7 @@ $(document).ready(function(){
     $("#country_delete").submit(function(e) {
         e.preventDefault();
     });
+    $("#country_add").submit(function(e){
+        e.preventDefault();
+    })
 });
