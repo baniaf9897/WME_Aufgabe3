@@ -110,7 +110,8 @@ app.get('/properties/:num',function(req,res){
 app.post('/items',function(req,res){
     var country = req.params.country;
     json.push(country);
-    res.send("Added country " + country.name + "to list !");
+    //res.send("Added country " + country.name + "to list !");
+    console.log("country",req.params.country);
 });
 
 app.delete('/items',function(req,res){
