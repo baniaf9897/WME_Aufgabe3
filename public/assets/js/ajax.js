@@ -106,22 +106,29 @@ $(document).ready(function(){
     });
 
     $("input[type=submit]",country_add).click(function(){
-        var name = $(country_name).val();
-        var rate = $(country_birth).val();
-        var phone = $(country_cellphone).val();
+        var _name = $(country_name).val();
+        var _rate = $(country_birth).val();
+        var _phone = $(country_cellphone).val();
 
-        var country = {
-            name:name,
-            rate:rate,
-            phone:phone
-        }
-        console.log("country", country);
-       /* $.ajax({
+        $.ajax({
             type: "POST",
             url: "http://localhost:3000/items",
-            data: country,
-            //success: alert("added");
-        });*/
+            data: JSON.stringify({
+                    name:_name,
+                    birth_rate_per_1000:_rate,
+                    cell_phones_per_100:_phone
+            }),
+            contentType: "application/json",
+            dataType: 'json',
+            success: function(res){
+                console.log("name",_name);
+                console.log("rate",_rate);
+                console.log("phone",_phone);
+            },
+            error:function(res){
+                console.log(res);
+            }
+        });
     });
 
     $("#rm_submit").click(function () {

@@ -20,7 +20,6 @@ app.use( express.static( path.join(__dirname, "public") ) );
 ****************************** csv2json *********************************
 **************************************************************************/
 var csv = require('csvtojson');
-var fs = require('fs');
 
 const csvFilePath = './world_data.csv';
 var json;
@@ -28,12 +27,6 @@ var json;
 csv().fromFile(csvFilePath).then(
     (_json) => {
         json = _json;
-        //write json as text file
-        // fs.writeFile("json.txt", json, function(err) {
-        //     if (err) {
-        //         console.log(err);
-        //     }
-        // });
     }
 )
 /**************************************************************************
@@ -108,10 +101,11 @@ app.get('/properties/:num',function(req,res){
 });
 
 app.post('/items',function(req,res){
-    var country = req.params.country;
+    console.log("BODY",req.body);
+    var country = req.body;
+    country.id = ("00" + Number(json.length + 1)).slice(-3);
     json.push(country);
-    //res.send("Added country " + country.name + "to list !");
-    console.log("country",req.params.country);
+    res.send("Added country"+ country.name +"to list!");
 });
 
 app.delete('/items',function(req,res){
