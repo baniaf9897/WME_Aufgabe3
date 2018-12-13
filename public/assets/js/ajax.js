@@ -102,7 +102,7 @@ $(document).ready(function(){
     $("#show_selected_prop").click(function(){
         var id = $( "#prop_selection" ).val();
         var column = "table ."+id;
-        $(column).toggle();
+        $(column).show();
     });
 
     $("input[type=submit]",country_add).click(function(){

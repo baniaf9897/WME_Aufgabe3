@@ -120,7 +120,8 @@ app.delete('/items',function(req,res){
 });
 
 app.delete('/items/:id',function(req,res){
-    var id = req.param.id - 1;
+    var id = Number(req.params.id) - 1;
+    console.log(req.param.id);
     if(id < 0 || id >= json.length)
         res.send("No such id "+id+" in database");
     else
