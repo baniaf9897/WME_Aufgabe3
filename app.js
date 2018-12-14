@@ -69,22 +69,22 @@ app.get('/items/:id1/:id2',function(req,res){
         res.status(400).send("Range not possible.");
     else{
         for(var i = 0; i <= range; i++){
-            var country = json.filter((el) => el.id == parseId(i))[0];
-            answer.push(json[json.indexOf(country)]);
+            var country = json.filter((el) => el.id == parseId(id1 + i))[0];
+            if(country !== undefined)
+                answer.push(json[json.indexOf(country)]);
         }
         res.send(answer);
     }
 });
-app.get('/properties',function(req,res){
-    // first get keys from all objects in array and then reduce to object with maximum amount of keys
-    var keys = json.map((row) => Object.keys(row)).reduce((max, key) => {
-        if(key > max)
+app.get('/properties',function(req,res){    
+    var max = json.reduce((max, key) => {
+        if(key.length > max.length)
             return key
         else
             return max
         , json[0]
     });
-    res.send(keys);
+    res.send(Object.keys(max));
 });
 app.get('/properties/:num',function(req,res){
     var num = Number(req.params.num) - 1;

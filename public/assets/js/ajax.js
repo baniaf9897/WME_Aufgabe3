@@ -80,7 +80,7 @@ $(document).ready(function(){
     $("#prop_selection").ready(function(){
         $.ajax({
             type: "GET",
-            dateType: "array",
+            dateType: "json",
             url: "http://localhost:3000/properties",
             success: function (result) {
                 var option = '';
@@ -164,6 +164,7 @@ $(document).ready(function(){
     });
 
     $("#country_delete").submit(function(e) {
+        e.preventDefault();
         $.ajax({
             type: "GET",
             dateType: "json",
@@ -185,7 +186,7 @@ $(document).ready(function(){
                 $('table > tbody').empty();
                 $('table > tbody').append(trHTML);
             }});
-        e.preventDefault();
+        
     });
     $("#country_add").submit(function(e){
         $.ajax({
