@@ -49,11 +49,12 @@ app.get('/items', function(req,res){
 });
 app.get('/items/:id',function(req,res){
     var id = Number(req.params.id);
+    var country = json.filter((el) => el.id == parseId(id))[0];
 
-    if(0 <= id && id <= json.length)
-        res.send(json[req.params.id - 1]);
-    else
+    if(country == undefined)
         res.status(400).send("No such id " + id + " in database.");
+    else
+        res.send(json[json.indexOf(country)]);
     
 });
 app.get('/items/:id1/:id2',function(req,res){
@@ -68,7 +69,8 @@ app.get('/items/:id1/:id2',function(req,res){
         res.status(400).send("Range not possible.");
     else{
         for(var i = 0; i <= range; i++){
-            answer.push(json[Number(id1) + i - 1]);
+            var country = json.filter((el) => el.id == parseId(i))[0];
+            answer.push(json[json.indexOf(country)]);
         }
         res.send(answer);
     }
@@ -103,7 +105,7 @@ app.get('/properties/:num',function(req,res){
 app.post('/items',function(req,res){
     console.log("BODY",req.body);
     var country = req.body;
-    country.id = ("00" + Number(json.length + 1)).slice(-3);
+    country.id = parseId(json.length + 1);
     json.push(country);
     res.send("Added country"+ country.name +"to list!");
 });
@@ -114,12 +116,21 @@ app.delete('/items',function(req,res){
 });
 
 app.delete('/items/:id',function(req,res){
-    var id = Number(req.params.id) - 1;
-    console.log(req.param.id);
-    if(id < 0 || id >= json.length)
-        res.send("No such id "+id+" in database");
-    else
-    json.splice(id,1);
-    res.send("Item "+id+ " deleted successfully.");
+    var id = req.params.id;
+
+    var country = json.filter((el) => el.id == parseId(id))[0];
+    console.log(country);
+    if(country == undefined)
+        res.status(400).send("No such id "+id+" in database");
+    else{
+        
+        json.splice(json.indexOf(country),1);
+        res.send("Item "+country.name+ " deleted successfully.");
+    }
 });
 
+
+
+function parseId(id){
+    return ("00" + id).slice(-3);
+}

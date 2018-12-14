@@ -139,6 +139,9 @@ $(document).ready(function(){
                 url: "http://localhost:3000/items",
                 success: function (result) {
                     alert(result);
+                },
+                error: function(err){
+                    console.log(err);
                 }
             });
         }
@@ -148,6 +151,9 @@ $(document).ready(function(){
                 url: "http://localhost:3000/items/"+id,
                 success: function (result) {
                     alert(result);
+                },
+                error: function(err){
+                    console.log(err);
                 }
             });
         }
@@ -158,9 +164,51 @@ $(document).ready(function(){
     });
 
     $("#country_delete").submit(function(e) {
+        $.ajax({
+            type: "GET",
+            dateType: "json",
+            url: "http://localhost:3000/items",
+            success: function(result){
+               
+                var trHTML = '';
+                $.each(result, function (i, item) {
+                    trHTML += '<tr>' +
+                        '<td class="id">' + item.id + '</td>' +
+                        '<td class="name">' + item.name + '</td>' +
+                        '<td class="birth_rate_per_1000">' + item.birth_rate_per_1000 + '</td>' +
+                        '<td class="cell_phones_per_100">' + item.cell_phones_per_100 + '</td>' +
+                        '<td class="children_per_woman">' + item.children_per_woman + '</td>' +
+                        '<td class="electricity_consumption_per_capita">' + item.electricity_consumption_per_capita + '</td>' +
+                        '<td class="internet_user_per_100">' + item.internet_user_per_100 + '</td>' +
+                        '</tr>';
+                });
+                $('table > tbody').empty();
+                $('table > tbody').append(trHTML);
+            }});
         e.preventDefault();
     });
     $("#country_add").submit(function(e){
+        $.ajax({
+            type: "GET",
+            dateType: "json",
+            url: "http://localhost:3000/items",
+            success: function(result){
+               
+                var trHTML = '';
+                $.each(result, function (i, item) {
+                    trHTML += '<tr>' +
+                        '<td class="id">' + item.id + '</td>' +
+                        '<td class="name">' + item.name + '</td>' +
+                        '<td class="birth_rate_per_1000">' + item.birth_rate_per_1000 + '</td>' +
+                        '<td class="cell_phones_per_100">' + item.cell_phones_per_100 + '</td>' +
+                        '<td class="children_per_woman">' + item.children_per_woman + '</td>' +
+                        '<td class="electricity_consumption_per_capita">' + item.electricity_consumption_per_capita + '</td>' +
+                        '<td class="internet_user_per_100">' + item.internet_user_per_100 + '</td>' +
+                        '</tr>';
+                });
+                $('table > tbody').empty();
+                $('table > tbody').append(trHTML);
+            }});
         e.preventDefault();
     })
 });
