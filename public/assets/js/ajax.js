@@ -1,19 +1,22 @@
 //alert("No ajax calls implemented ;)");
 $(document).ready(function(){
 
-    //$("#add_submit").click(function(){
+    //Funktionen für Filter
     $("input[type=submit]",country_filter).click(function(){
+        //Eingaben aus Input-Feldern
         var id = $(country_filter_id).val();
         var idrange = $(country_filter_range).val();
+        //idrange hat höhere Priorität
         if (idrange != ""){
-
+            //idrange wird aufgesplitet
             var id = idrange.split("-");
+            //ajax Aufruf der Funktion
             $.ajax({
                 type: "GET",
                 dateType: "json",
                 url: "http://localhost:3000/items/"+id[0]+"/"+id[1],
                 success: function(result){
-
+                    //result wird in Variable geschrieben und in den tbody eingefügt
                     var trHTML = '';
                     $.each(result, function (i, item) {
                         trHTML += '<tr>' +
@@ -26,17 +29,20 @@ $(document).ready(function(){
                             '<td class="internet_user_per_100">' + item.internet_user_per_100 + '</td>' +
                             '</tr>';
                     });
+                    //neuladen der Tabelle
                     $('table > tbody').empty();
                     $('table > tbody').append(trHTML);
                 }});
         }
+        //Funktion für einfachen Filter
         else {if (id != ""){
+            //ajax Aufruf der Funktion
             $.ajax({
                 type: "GET",
                 dateType: "json",
                 url: "http://localhost:3000/items/"+ id,
                 success: function(result){
-
+                    //result wird in Variable geschrieben und in den tbody eingefügt
                     var trHTML = '';
                     trHTML += '<tr>' +
                         '<td class="id">' + result.id + '</td>' +
@@ -47,19 +53,21 @@ $(document).ready(function(){
                         '<td class="electricity_consumption_per_capita">' + result.electricity_consumption_per_capita + '</td>' +
                         '<td class="internet_user_per_100">' + result.internet_user_per_100 + '</td>' +
                         '</tr>';
+                    //neuladen der Tabelle
                     $('table > tbody').empty();
                     $('table > tbody').append(trHTML);
                 }});
         }}
     });
-
+    //Anzeigen der vollständigen Tabelle
     $("#table_body").ready(function(){
+        //ajax Aufruf von /items
         $.ajax({
             type: "GET",
             dateType: "json",
             url: "http://localhost:3000/items",
             success: function(result){
-
+                //result wird in Variable geschrieben und in den tbody eingefügt
                 var trHTML = '';
                 $.each(result, function (i, item) {
                     trHTML += '<tr>' +
@@ -76,13 +84,15 @@ $(document).ready(function(){
                 $('table > tbody').append(trHTML);
             }});
     });
-
+    //Laden der Properties
     $("#prop_selection").ready(function(){
+        //ajax Aufruf um properties zu laden
         $.ajax({
             type: "GET",
             dateType: "json",
             url: "http://localhost:3000/properties",
             success: function (result) {
+                //result in Variable geladen und zu html hinzugefügt
                 var option = '';
                 for(var i = 0; i < result.length; i++){
                     var a = i+1;
@@ -92,24 +102,25 @@ $(document).ready(function(){
             }
         });
     });
-
+    //Funktion für hide
     $("#hide_selected_prop").click(function(){
         var id = $( "#prop_selection" ).val();
         var column = "table ."+id;
         $(column).hide();
     });
-
+    //Funktion für show
     $("#show_selected_prop").click(function(){
         var id = $( "#prop_selection" ).val();
         var column = "table ."+id;
         $(column).show();
     });
-
+    //Funktion zum hinzufügen
     $("input[type=submit]",country_add).click(function(){
+        //Inputs
         var _name = $(country_name).val();
         var _rate = $(country_birth).val();
         var _phone = $(country_cellphone).val();
-
+        //Aufruf der ajax Funktion
         $.ajax({
             type: "POST",
             url: "http://localhost:3000/items",
@@ -120,49 +131,63 @@ $(document).ready(function(){
             }),
             contentType: "application/json",
             dataType: 'json',
-            success: function(res){
-                console.log("name",_name);
-                console.log("rate",_rate);
-                console.log("phone",_phone);
+            success: function (result) {
+                //Feedback
+                document.getElementById('Well').style.display = 'block';
+                document.getElementById('welltext').innerHTML = result;
             },
-            error:function(res){
-                console.log(res);
+            error: function(xhr, status, error) {
+                //Feedback
+                document.getElementById('Danger').style.display = 'block';
+                document.getElementById('dangertext').innerHTML = xhr.responseText;
             }
         });
     });
-
+    //Funktion für Löschen
     $("#rm_submit").click(function () {
+        //Input
         var id = $(country_delete_id).val();
+        //Wenn Input leer, dann letztes Löschen über Ajax Funktion
         if (id == ""){
             $.ajax({
                 type: "DELETE",
                 url: "http://localhost:3000/items",
                 success: function (result) {
-                    alert(result);
+                    //Feedback
+                    document.getElementById('Well').style.display = 'block';
+                    document.getElementById('welltext').innerHTML = result;
                 },
-                error: function(err){
-                    console.log(err);
+                error: function(xhr, status, error) {
+                    //Feedback
+                    document.getElementById('Danger').style.display = 'block';
+                    document.getElementById('dangertext').innerHTML = xhr.responseText;
                 }
             });
         }
+        //Wenn Input nicht leer, dann Löschen über Ajax Funktion
         else{
             $.ajax({
                 type: "DELETE",
                 url: "http://localhost:3000/items/"+id,
                 success: function (result) {
-                    alert(result);
+                    //Feedback
+                    document.getElementById('Well').style.display = 'block';
+                    document.getElementById('welltext').innerHTML = result;
                 },
-                error: function(err){
-                    console.log(err);
+
+                error: function(xhr, status, error) {
+                    //Feedback
+                    document.getElementById('Danger').style.display = 'block';
+                    document.getElementById('dangertext').innerHTML = xhr.responseText;
                 }
             });
         }
     });
-
+    //Blockieren des Neuladen der Seite
     $("#country_filter").submit(function(e) {
         e.preventDefault();
     });
-
+    //Neuladen der Tabelle nach Löschen
     $("#country_delete").submit(function(e) {
         e.preventDefault();
         $.ajax({
@@ -188,6 +213,7 @@ $(document).ready(function(){
             }});
         
     });
+    //Neuladen der Tabelle nach Hinzufügen
     $("#country_add").submit(function(e){
         $.ajax({
             type: "GET",
