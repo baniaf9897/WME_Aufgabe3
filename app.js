@@ -117,7 +117,7 @@ app.post('/items',function(req,res){
     country.id = parseId(json.length + 1);
     //add new country into array
     json.push(country);
-    res.send("Added country"+ country.name +"to list!");
+    res.send("Added country "+ country.name +" to list!");
 });
 
 app.delete('/items',function(req,res){
