@@ -388,6 +388,14 @@ footer > .container > div.right {
 	color: black;
 }
 
+.chart{
+	padding:30p;
+}
+
+.dropDown{
+	padding:30px;
+}
+
 /* Media Queries */
 
 /********************************************************
