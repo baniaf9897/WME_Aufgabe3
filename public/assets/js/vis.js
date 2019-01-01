@@ -2,6 +2,7 @@ var props;
 var data;
 var width = 600;
 var height = 200;
+var rectWidth ;
 
 var chart1
 var chart2
@@ -18,7 +19,7 @@ $.ajax({
     url: "http://localhost:3000/properties",
     success: function(result){
         result.splice(result.indexOf("name"),1);
-        result.splice(result.indexOf("id"),1);
+        // result.splice(result.indexOf("id"),1);
         props = result;
         drawDropDowns();
 }});
@@ -29,6 +30,8 @@ $.ajax({
     url: "http://localhost:3000/items",
     success: function(result){
         data = result;
+        rectWidth =  width/data.length;
+        console.log(rectWidth);
         drawCharts();
 }});
 
@@ -60,12 +63,32 @@ function drawCharts(){
     .data(data)
     .enter()
     .append('rect')
+    .attr('id',function(d){
+        var stringArray = d.name.split(" ");
+        return stringArray.reduce((concatStrings,currentString) =>concatStrings.concat(currentString));})
     .attr('x', (s) => xScale(s.name))
     .attr('y', (s) => yScale(s.id))
-    .attr('height', (s) => height - yScale(s.id))
-    .attr('width', xScale.bandwidth())
+    .attr('height', (s) => (height) - yScale(s.id))
+    .attr("width", rectWidth - 1)
     .attr('fill', '#333333')
+    .on('mouseover', function(d,i){
 
+        var name;
+        var stringArray = d.name.split(" ");
+        name = stringArray.reduce((concatStrings,currentString) =>concatStrings.concat(currentString));
+        d3.selectAll("[id=".concat(name).concat( ']')).transition().duration(300)
+        .attr('fill', '#00ff00');
+
+    })
+    .on('mouseout', function(d,i){
+    
+        var name;
+        var stringArray = d.name.split(" ");
+        name = stringArray.reduce((concatStrings,currentString) =>concatStrings.concat(currentString));
+       
+        d3.selectAll("[id=".concat(name).concat( ']')).transition().duration(300)
+        .attr('fill', '#333333');
+    })
     var svg2 = d3.select("#chart2").append("svg").attr('height',height + 150).attr('width',width + 100);
     chart2 = svg2.append('g').attr('transform', 'translate(50,50)');
 
@@ -80,11 +103,33 @@ function drawCharts(){
     .data(data)
     .enter()
     .append('rect')
+    .attr('id',function(d){
+        var stringArray = d.name.split(" ");
+        return stringArray.reduce((concatStrings,currentString) =>concatStrings.concat(currentString));})
     .attr('x', (s) => xScale(s.name))
     .attr('y', (s) => yScale(s.id))
     .attr('height', (s) => height - yScale(s.id))
-    .attr('width', xScale.bandwidth())
+    .attr("width", rectWidth - 1)
     .attr('fill', '#333333')
+    .on('mouseover', function(d,i){
+
+        var name;
+        var stringArray = d.name.split(" ");
+        name = stringArray.reduce((concatStrings,currentString) =>concatStrings.concat(currentString));
+       
+        d3.selectAll("[id=".concat(name).concat( ']')).transition().duration(300)
+        .attr('fill', '#00ff00');
+
+    })
+    .on('mouseout', function(d,i){
+
+        var name;
+        var stringArray = d.name.split(" ");
+        name = stringArray.reduce((concatStrings,currentString) =>concatStrings.concat(currentString));
+       
+        d3.selectAll("[id=".concat(name).concat( ']')).transition().duration(300)
+        .attr('fill', '#333333');
+    })
 
 }
 
@@ -123,6 +168,8 @@ function selectProperty2(){
 
 function updateCharts(prop,_chart){
 
+
+
     yScale = d3.scaleLinear()
     .range([height, 0])
     .domain([0, d3.max(data.map((item) => item[prop]))]);
@@ -133,16 +180,21 @@ function updateCharts(prop,_chart){
 
     _chart.selectAll('rect')
     .data(data)
+    .attr('id',function(d){
+        var stringArray = d.name.split(" ");
+        return stringArray.reduce((concatStrings,currentString) =>concatStrings.concat(currentString));})
     .attr('x', (s) => xScale(s.name))
     .attr('y', (s) => yScale(s[prop]))
     .attr('height', 
         (s) =>{
-            if(height - Math.round(yScale(s[prop])) < 0)
+            console.log(height - Math.round(yScale(s[prop])));
+            if(height - Math.round(yScale(s[prop])) < 0 || yScale(s[prop]) < 0)
                 return 0;
             else
                 return height - Math.round(yScale(s[prop]))
         }
         )
-    .attr('width', xScale.bandwidth())
+    .attr("width", rectWidth - 1)
+    
 }
 
