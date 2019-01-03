@@ -13,6 +13,36 @@ var xScale
 var xAxis
 var yAxis
 
+var mymap;
+var marker;
+var markdata;
+
+var newMarker = L.ExtraMarkers.icon({
+    icon: 'fa-circle',
+    markerColor: 'orange',
+    shape: 'circle',
+    prefix: 'fa'
+});
+var hoverMarker = L.ExtraMarkers.icon({
+    icon: 'fa-circle',
+    markerColor: 'green',
+    shape: 'circle',
+    prefix: 'fa'
+});
+
+$(document).ready(function() {
+
+    $.ajax({
+        type: "GET",
+        dateType: "json",
+        url: "http://localhost:3000/items",
+        success: function (result) {
+            markdata = result;
+            map();
+        }
+    });
+});
+
 $.ajax({
     type: "GET",
     dateType: "json",
@@ -195,6 +225,42 @@ function updateCharts(prop,_chart){
         }
         )
     .attr("width", rectWidth - 1)
-    
+    mymap.eachLayer(function (layer) {
+        mymap.removeLayer(layer);
+    });
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        subdomains: ['a', 'b', 'c']
+    }).addTo(mymap);
+    marks();
+}
+function map() {
+    mymap = L.map('mapid').setView([51.505, -0.09], 2);
+
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        subdomains: ['a', 'b', 'c']
+    }).addTo(mymap);
+    marks();
 }
 
+function marks() {
+
+    for (var i = 0; i < 25; i++) {
+
+        marker = new L.marker([markdata[i].gps_lat, markdata[i].gps_long], {icon: newMarker});
+        mymap.addLayer(marker);
+
+        var s1 = d3.select('#select1').select('select').property("value");
+        var d1 = markdata[i][s1];
+        var s2 = d3.select('#select2').select('select').property("value");
+        var d2 = markdata[i][s2];
+        marker.bindPopup(markdata[i].name + "<br>" + s1 + "<br>" + d1+"<br>"+s2+ "<br>" + d2).openPopup();
+        marker.on('mouseover',function(ev) {
+            this.setOpacity(0.5);
+        });
+        marker.on('mouseout', function (e) {
+            this.setOpacity(1);
+        });
+    }
+}

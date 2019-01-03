@@ -396,6 +396,8 @@ footer > .container > div.right {
 	padding:30px;
 }
 
+#mapid { width: 600px; height: 380px;}
+
 /* Media Queries */
 
 /********************************************************

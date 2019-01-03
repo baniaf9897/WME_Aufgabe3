@@ -13,6 +13,14 @@
 	<link href='https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,500,500italic,700,700italic' rel='stylesheet' type='text/css'>
 	<link href="assets/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 	<link href="assets/css/style.css" type="text/css" rel="stylesheet">
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+		  integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+		  crossorigin=""/>
+	<link rel="stylesheet" href="assets/css/leaflet.extra-markers.min.css">
+	<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+			integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+			crossorigin=""></script>
+	<script src="assets/js/leaflet.extra-markers.min.js"></script>
 </head>
 
 <body>
@@ -56,6 +64,8 @@
 			<div class="chart" id ="chart2"></div>
 		</section>
 </div>
+
+<div class="container" id="mapid"></div>
 
 <footer>
 	<div class="container">
