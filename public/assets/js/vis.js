@@ -12,17 +12,18 @@ var xScale
 
 var xAxis
 var yAxis
-
+//Variablen für die Map
 var mymap;
 var marker;
 var markdata;
-
+//erstellen des Icon mit ExtraMarkers
 var newMarker = L.ExtraMarkers.icon({
     icon: 'fa-circle',
     markerColor: 'orange',
     shape: 'circle',
     prefix: 'fa'
 });
+//erstellen des Hover-Icon mit ExtraMarkers
 var hoverMarker = L.ExtraMarkers.icon({
     icon: 'fa-circle',
     markerColor: 'green',
@@ -31,13 +32,14 @@ var hoverMarker = L.ExtraMarkers.icon({
 });
 
 $(document).ready(function() {
-
+//items werden durch ajax in Variable geladen
     $.ajax({
         type: "GET",
         dateType: "json",
         url: "http://localhost:3000/items",
         success: function (result) {
             markdata = result;
+            //starten der Funktion, die die Map erstellt
             map();
         }
     });
@@ -225,37 +227,48 @@ function updateCharts(prop,_chart){
         }
         )
     .attr("width", rectWidth - 1)
+    //nach Update der Charts wird die Map aktualisiert
+    //alle Layer werden gelöscht
     mymap.eachLayer(function (layer) {
         mymap.removeLayer(layer);
     });
+    //Map wird neu geladen
     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         subdomains: ['a', 'b', 'c']
     }).addTo(mymap);
+    //Funktion startet erstellen der Marker
     marks();
 }
+//initialisiert die Map
 function map() {
+    //Startpunkt der Map
     mymap = L.map('mapid').setView([51.505, -0.09], 2);
-
+    //Karte laden
     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         subdomains: ['a', 'b', 'c']
     }).addTo(mymap);
+    //Funktion startet erstellen der Marker
     marks();
 }
-
+//erstellt Marker
 function marks() {
-
+    //Schleife, weil 25 Marker
     for (var i = 0; i < 25; i++) {
-
+        //Koordinaten aus Element von Markdata werden genommen und Marker erstellt
         marker = new L.marker([markdata[i].gps_lat, markdata[i].gps_long], {icon: newMarker});
+        //add Layer
         mymap.addLayer(marker);
-
+        //Popup-Nachricht
+        //sucht ausgewählte Property und sucht dann passenden Datensatz in markdata
         var s1 = d3.select('#select1').select('select').property("value");
         var d1 = markdata[i][s1];
         var s2 = d3.select('#select2').select('select').property("value");
         var d2 = markdata[i][s2];
+        //Nachricht erstellt und an Marker gebunden
         marker.bindPopup(markdata[i].name + "<br>" + s1 + "<br>" + d1+"<br>"+s2+ "<br>" + d2).openPopup();
+        //Hover-Effekt für Marker
         marker.on('mouseover',function(ev) {
             this.setOpacity(0.5);
         });
