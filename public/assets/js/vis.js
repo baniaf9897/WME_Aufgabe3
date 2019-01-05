@@ -109,6 +109,15 @@ function drawCharts(){
         name = stringArray.reduce((concatStrings,currentString) =>concatStrings.concat(currentString));
         d3.selectAll("[id=".concat(name).concat( ']')).transition().duration(300)
         .attr('fill', '#00ff00');
+        //Schleife für Synchronität des Hover-Effekt
+        for (i = 0; i < markerArray.length; i++) {
+            var name2;
+            var stringArray2 = markerArray[i].options.title.split(" ");
+            name2 = stringArray2.reduce((concatStrings,currentString) =>concatStrings.concat(currentString));
+            if (name2 == name){
+                markerArray[i].setOpacity(0.5);
+            }
+        }
 
     })
     .on('mouseout', function(d,i){
@@ -119,6 +128,15 @@ function drawCharts(){
        
         d3.selectAll("[id=".concat(name).concat( ']')).transition().duration(300)
         .attr('fill', '#333333');
+        //Schleife für Synchronität des Hover-Effekt
+        for (i = 0; i < markerArray.length; i++) {
+            var name2;
+            var stringArray2 = markerArray[i].options.title.split(" ");
+            name2 = stringArray2.reduce((concatStrings,currentString) =>concatStrings.concat(currentString));
+            if (name2 == name){
+                markerArray[i].setOpacity(1);
+            }
+        }
     })
     var svg2 = d3.select("#chart2").append("svg").attr('height',height + 150).attr('width',width + 100);
     chart2 = svg2.append('g').attr('transform', 'translate(50,50)');
@@ -150,6 +168,15 @@ function drawCharts(){
        
         d3.selectAll("[id=".concat(name).concat( ']')).transition().duration(300)
         .attr('fill', '#00ff00');
+        //Schleife für Synchronität des Hover-Effekt
+        for (i = 0; i < markerArray.length; i++) {
+            var name2;
+            var stringArray2 = markerArray[i].options.title.split(" ");
+            name2 = stringArray2.reduce((concatStrings,currentString) =>concatStrings.concat(currentString));
+            if (name2 == name){
+                markerArray[i].setOpacity(0.5);
+            }
+        }
 
     })
     .on('mouseout', function(d,i){
@@ -160,6 +187,15 @@ function drawCharts(){
        
         d3.selectAll("[id=".concat(name).concat( ']')).transition().duration(300)
         .attr('fill', '#333333');
+        //Schleife für Synchronität des Hover-Effekt
+        for (i = 0; i < markerArray.length; i++) {
+            var name2;
+            var stringArray2 = markerArray[i].options.title.split(" ");
+            name2 = stringArray2.reduce((concatStrings,currentString) =>concatStrings.concat(currentString));
+            if (name2 == name){
+                markerArray[i].setOpacity(1);
+            }
+        }
     })
 
 }
@@ -280,8 +316,10 @@ function marks() {
        
             d3.selectAll("[id=".concat(name).concat( ']')).transition().duration(300)
             .attr('fill', '#00ff00');
+            this.setOpacity(0.5);
 
         })
+        //Hover-Effekt für Marker
         marker.on('mouseout', function (ev) {
             var lat = ev.latlng.lat;
             var lng = ev.latlng.lng;
@@ -295,6 +333,7 @@ function marks() {
        
             d3.selectAll("[id=".concat(name).concat( ']')).transition().duration(300)
             .attr('fill', '#333333');
+            this.setOpacity(1);
 
         });
         markerArray.push(marker);
