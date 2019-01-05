@@ -61,7 +61,6 @@ $.ajax({
     success: function(result){
         data = result;
         rectWidth =  width/data.length;
-        console.log(rectWidth);
         drawCharts();
 }});
 
@@ -198,8 +197,6 @@ function selectProperty2(){
 
 function updateCharts(prop,_chart){
 
-
-
     yScale = d3.scaleLinear()
     .range([height, 0])
     .domain([0, d3.max(data.map((item) => item[prop]))]);
@@ -248,7 +245,7 @@ function marks() {
 
     for (var i = 0; i < 25; i++) {
 
-        marker = new L.marker([markdata[i].gps_lat, markdata[i].gps_long], {icon: newMarker});
+        marker = new L.marker([markdata[i].gps_lat, markdata[i].gps_long], {icon: newMarker, name:markdata[i].name});
         mymap.addLayer(marker);
 
         var s1 = d3.select('#select1').select('select').property("value");
@@ -257,10 +254,24 @@ function marks() {
         var d2 = markdata[i][s2];
         marker.bindPopup(markdata[i].name + "<br>" + s1 + "<br>" + d1+"<br>"+s2+ "<br>" + d2).openPopup();
         marker.on('mouseover',function(ev) {
-            this.setOpacity(0.5);
-        });
-        marker.on('mouseout', function (e) {
-            this.setOpacity(1);
+
+            var name;
+            var stringArray = ev.target.options.name.split(" ");
+            name = stringArray.reduce((concatStrings,currentString) =>concatStrings.concat(currentString));
+       
+            d3.selectAll("[id=".concat(name).concat( ']')).transition().duration(300)
+            .attr('fill', '#00ff00');
+
+            this.setIcon(hoverMarker);
+        }).on('mouseout', function (e) {
+            var name;
+            var stringArray = e.target.options.name.split(" ");
+            name = stringArray.reduce((concatStrings,currentString) =>concatStrings.concat(currentString));
+       
+            d3.selectAll("[id=".concat(name).concat( ']')).transition().duration(300)
+            .attr('fill', '#333333');
+
+            this.setIcon(newMarker);
         });
     }
 }
