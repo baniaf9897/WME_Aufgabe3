@@ -44,7 +44,7 @@ $(document).ready(function() {
         }
     });
 });
-
+//properties werden geladen, via ajax
 $.ajax({
     type: "GET",
     dateType: "json",
@@ -55,7 +55,7 @@ $.ajax({
         props = result;
         drawDropDowns();
 }});
-
+//daten werden geladen, via ajax
 $.ajax({
     type: "GET",
     dateType: "json",
@@ -65,31 +65,38 @@ $.ajax({
         rectWidth =  width/data.length;
         drawCharts();
 }});
-
+//tabellen werden gezeichnet
 function drawCharts(){
     
+    //scale für y achse wird definiert und initial mit den ID Nummern beschriftet
     yScale = d3.scaleLinear()
     .range([height, 0])
     .domain([0, d3.max(data.map((item) => item.id))]);
     
+    //scale für x achse wird definiert und mit den Länder namen beschriftet , diese Achse bleibt konstant
     xScale = d3.scaleBand()
     .range([0, width])
     .domain(data.map((country) => country.name))
     .padding(0.4);
     
+    // x und y Achse werden nun mithilfe der Scales initialisiert
     xAxis = d3.axisBottom(xScale);
     yAxis = d3.axisLeft(yScale);
 
+    //div wird mittels d3 selektiert und Größe definiert => Rahmen für Chart
     var svg1 = d3.select("#chart1").append("svg").attr('height',height + 150).attr('width',width + 100);
+    //chart wird innerhalb des Rahmens eingefügt, dabei je um 50px hereingesetzt, für Beschriftung
     chart1 = svg1.append('g').attr('transform', 'translate(50,50)');
 
+     //yAchse in Chart eingefügt
     chart1.append('g').classed('y',true).call(yAxis);
-   
+    //xAchse in Chart eingefügt und Beschriftung um 90 Grad gedreht 
     chart1.append('g').classed('x',true).attr('transform', 'translate(0, '+ height +')')
     .call(xAxis).selectAll("text")
     .attr("transform", "rotate(90)").attr("dy", ".35em")
     .attr("x", 15).attr("y",0).style("text-anchor", "start");
    
+    //Bars in Chart eingefügt, dazu auf selectAll() zugegriffen , welches für jeden Eintrag in data eine Bar zeichnet, Größe und Id werden dynamisch berechnet
     chart1.selectAll()
     .data(data)
     .enter()
@@ -104,6 +111,9 @@ function drawCharts(){
     .attr('fill', '#333333')
     .on('mouseover', function(d,i){
 
+        //Name wird herausgelesen und getrimmt,
+        //anschließend wird nach allen Elementen mit gleicher ID gesucht
+        //und Hover-Animation angewendet
         var name;
         var stringArray = d.name.split(" ");
         name = stringArray.reduce((concatStrings,currentString) =>concatStrings.concat(currentString));
@@ -125,7 +135,7 @@ function drawCharts(){
         var name;
         var stringArray = d.name.split(" ");
         name = stringArray.reduce((concatStrings,currentString) =>concatStrings.concat(currentString));
-       
+       // analog zu mouseover nur dass hier die Hover-Animation wieder rückgängig gemacht wird
         d3.selectAll("[id=".concat(name).concat( ']')).transition().duration(300)
         .attr('fill', '#333333');
         //Schleife für Synchronität des Hover-Effekt
@@ -138,6 +148,8 @@ function drawCharts(){
             }
         }
     })
+
+    //analog zur ersten Chart
     var svg2 = d3.select("#chart2").append("svg").attr('height',height + 150).attr('width',width + 100);
     chart2 = svg2.append('g').attr('transform', 'translate(50,50)');
 
@@ -201,17 +213,21 @@ function drawCharts(){
 }
 
 function drawDropDowns(){
-    
-    var dropDown1 = d3.selectAll('#select1').append('select')
+    //div wird mittels d3 selektiert und ein select Element eingefügt
+    //event-listener on Change 
+    //bei Änderung wird selectProperty1() aufgerufen
+    var dropDown1 = d3.select('#select1').append('select')
     .on('change',selectProperty1)
 
+    //für jedes Element in props wird nun ein option Element eingefügt
     dropDown1
     .selectAll('option')
 	.data(props).enter()
 	.append('option')
     .text(function (d) { return d; });
 
-    var dropDown2 = d3.selectAll('#select2').append('select')
+    //analog zu dropDown1
+    var dropDown2 = d3.select('#select2').append('select')
     .on('change',selectProperty2)
 
     dropDown2
@@ -223,10 +239,12 @@ function drawDropDowns(){
 }
 
 function selectProperty1(){
+    //neuer Wert wird aus Select-Box herausgelesen und updateChart() aufgerufen
     var selectedProperty = d3.select('#select1').select('select').property("value");
     updateCharts(selectedProperty,chart1);
 }
 function selectProperty2(){
+    //analog zu selectProperty1()
     var selectedProperty = d3.select('#select2').select('select').property("value");
     updateCharts(selectedProperty,chart2);
 }
@@ -234,15 +252,15 @@ function selectProperty2(){
 
 
 function updateCharts(prop,_chart){
-
+    //yScale wird an neu ausgewählter Property angepasst(Beschriftung).
     yScale = d3.scaleLinear()
     .range([height, 0])
     .domain([0, d3.max(data.map((item) => item[prop]))]);
-    
+    //y Achse wird aktualisiert
     yAxis = d3.axisLeft(yScale);
-
+    //Chart wird neue y Achse übergeben
     _chart.select('.y').call(yAxis);
-
+    //Bars werden mit neuen Daten aktualisiert
     _chart.selectAll('rect')
     .data(data)
     .attr('id',function(d){
@@ -315,8 +333,8 @@ function marks() {
        
             d3.selectAll("[id=".concat(name).concat( ']')).transition().duration(300)
             .attr('fill', '#00ff00');
-            this.setOpacity(0.5);
 
+            this.setOpacity(0.5);
         })
         //Hover-Effekt für Marker
         marker.on('mouseout', function (ev) {
@@ -332,7 +350,7 @@ function marks() {
        
             d3.selectAll("[id=".concat(name).concat( ']')).transition().duration(300)
             .attr('fill', '#333333');
-            this.setOpacity(1);
+            this.setOpacity(1.0);
 
         });
         markerArray.push(marker);
