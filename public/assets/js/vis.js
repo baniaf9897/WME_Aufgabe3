@@ -1,7 +1,7 @@
 var props;
 var data;
 var width = 600;
-var height = 200;
+var height = 150;
 var rectWidth ;
 
 var chart1
@@ -252,7 +252,6 @@ function updateCharts(prop,_chart){
     .attr('y', (s) => yScale(s[prop]))
     .attr('height', 
         (s) =>{
-            console.log(height - Math.round(yScale(s[prop])));
             if(height - Math.round(yScale(s[prop])) < 0 || yScale(s[prop]) < 0)
                 return 0;
             else
@@ -301,7 +300,7 @@ function marks() {
         var s2 = d3.select('#select2').select('select').property("value");
         var d2 = markdata[i][s2];
         //Nachricht erstellt und an Marker gebunden
-        marker.bindPopup(markdata[i].name + "<br>" + s1 + "<br>" + d1+"<br>"+s2+ "<br>" + d2).openPopup();
+        marker.bindPopup(markdata[i].name + "<br>" + s1 + "<br>" + d1+"<br>"+s2+ "<br>" + d2);
         //Hover-Effekt für Marker
         marker.on('mouseover',function(ev) {
             var lat = ev.latlng.lat;

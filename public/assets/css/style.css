@@ -389,15 +389,18 @@ footer > .container > div.right {
 }
 
 .chart{
-	padding:30p;
+
 }
 
 .dropDown{
-	padding:30px;
+	margin-bottom: -10px;
 }
 
-#mapid { width: 600px; height: 380px;}
-
+#mapid { width: 600px; height: 650px;}
+#content{
+	display:flex;
+	flex-direction: row;
+}
 /* Media Queries */
 
 /********************************************************
